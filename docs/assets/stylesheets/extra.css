@@ -1,0 +1,6 @@
+/* Docstring "Dev Notes:" sections point contributors at the architecture/ notes,
+   which are not published. mkdocstrings renders the section as
+   <details class="dev-notes">; keep it out of the public API reference. */
+details.dev-notes {
+  display: none;
+}

@@ -1,0 +1,60 @@
+line-length    = 80
+target-version = "py312"
+
+# The smoke corpus is fixture data: source files written to be extracted from,
+# and Markdown documents written to be processed. Formatting or relinting them
+# would change what the expected outputs say the tool produces.
+extend-exclude = ["tests/smoke/tree"]
+
+[lint]
+ignore = [
+    'ANN401', # any-type
+]
+select = [
+    "A",    # flake8-builtins
+    "ANN",  # flake8-annotations
+    "ARG",  # flake8-unused-arguments
+    "B",    # flake8-bugbear
+    "BLE",  # flake8-blind-except
+    "C4",   # flake8-comprehensions
+    "C90",  # mccabe
+    "COM",  # flake8-commas
+    "D",    # pydocstyle
+    "E",    # pycodestyle errors
+    "EM",   # flake8-errmsg
+    "F",    # pyflakes
+    "FBT",  # flake8-boolean-trap
+    "FURB", # refurb
+    "G",    # flake8-logging-format
+    "I",    # isort
+    "ICN",  # flake8-import-conventions
+    "ISC",  # flake8-implicit-str-concat
+    "LOG",  # flake8-logging
+    "PERF", # Perflint
+    "PIE",  # flake8-pie
+    "PL",   # Pylint
+    "PT",   # flake8-pytest-style
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+    "SLOT", # flake8-slots
+    "TC",   # flake8-type-checking
+    "TID",  # flake8-tidy-imports
+    "TRY",  # tryceratops
+    "PL",   # Pylint
+    "RUF",  # Ruff-specific rules
+    "S",    # flake8-bandit
+    "UP",   # pyupgrade
+]
+[lint.per-file-ignores]
+"tests/**" = [
+    "ANN",     # flake8-annotations
+    "ARG",     # flake8-unused-arguments
+    "D",       # pydocstyle -- a test's name is its docstring
+    "PLR2004", # magic-value-comparison
+    "S",       # flake8-bandit
+    "UP007",   # non-pep604-annotation-union
+    "UP045",   # non-pep604-annotation-optional
+]
+
+[lint.pydocstyle]
+convention = "google"

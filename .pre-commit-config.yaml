@@ -1,0 +1,68 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # v6.0.0
+  hooks:
+  - id: check-added-large-files
+    args: [--maxkb=128]
+  - id: check-ast
+  - id: check-case-conflict
+  - id: check-illegal-windows-names
+  - id: check-json
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: check-toml
+  - id: check-yaml
+  - id: debug-statements
+  - id: detect-private-key
+  - id: end-of-file-fixer
+  - id: mixed-line-ending
+    args: [--fix=lf]
+  - id: no-commit-to-branch
+    args: [--branch, master]
+  - id: trailing-whitespace
+    args: [--markdown-linebreak-ext=md]
+
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: 4380fbb73a154b5f5624794c1c78d9719ccc860f  # v2.16.0
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']
+
+- repo: https://github.com/codespell-project/codespell
+  rev: 2ccb47ff45ad361a21071a7eedda4c37e6ae8c5a  # v2.4.2
+  hooks:
+  - id: codespell
+    args: [--write-changes]
+
+- repo: https://github.com/astral-sh/uv-pre-commit
+  rev: c665864e22f27255a10d82e14f8ccea6843fd65e  # 0.11.19
+  hooks:
+  - id: uv-lock
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: 22f0422809455ec89ffdcf5a00170ba816e42ddb  # v0.15.16
+  hooks:
+  - id: ruff-check
+    args: [--fix]
+  - id: ruff-format
+
+- repo: local
+  hooks:
+  - id: markdown-code-snippet
+    name: inject code snippets into Markdown
+    description: Run this project's own tool over this project's own documentation.
+    entry: uv run markdown-code-snippet
+    language: system
+    # The documents are named rather than taken from the changed files, because
+    # editing an example file makes a document stale without touching it.
+    args: [README.md, docs/]
+    pass_filenames: false
+    # tests/smoke/ holds annotated fixtures whose paths are written for a
+    # temporary tree, so processing them in place would fail. The test suite is
+    # what runs the tool over those.
+    files: ^(README\.md|docs/.*\.md|examples/.*)$
+
+- repo: https://github.com/rhysd/actionlint
+  rev: 914e7df21a07ef503a81201c76d2b11c789d3fca  # v1.7.12
+  hooks:
+  - id: actionlint

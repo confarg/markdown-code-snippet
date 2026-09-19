@@ -1,0 +1,13 @@
+- id: markdown-code-snippet
+  name: inject code snippets into Markdown
+  description: Rewrite annotated code blocks from the files they point at.
+  entry: markdown-code-snippet
+  language: python
+  types: [markdown]
+
+- id: markdown-code-snippet-check
+  name: check Markdown code snippets are up to date
+  description: Fail if an annotated code block no longer matches its source.
+  entry: markdown-code-snippet --check
+  language: python
+  types: [markdown]

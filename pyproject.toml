@@ -1,0 +1,37 @@
+[project]
+name = "markdown-code-snippet"
+version = "0.0.1.dev1"
+description = "Inject snippets of files or python code into Markdown files."
+license = "MPL-2.0"
+license-files = ["LICENSE"]
+readme = "README.md"
+authors = [
+    { name = "confarg", email = "280620574+confarg@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+markdown-code-snippet = "markdown_code_snippet._cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipython>=9.17.1",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "pytest-cov>=5",
+    "ty>=0.0.1a1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ty.src]
+# The smoke corpus is a fixture: files under it are data for the tests, written
+# to exercise extraction, and are deliberately not held to the project's own
+# type-checking or lint rules. Ruff excludes the same tree in .ruff.toml.
+exclude = ["tests/smoke/tree"]
