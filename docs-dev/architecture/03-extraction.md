@@ -38,6 +38,7 @@ The rejected alternative is recorded in
 | `ClassDef` | `#User` |
 | `FunctionDef`, `AsyncFunctionDef` | `#load`, `#User.rename` |
 | `Assign`, `AnnAssign` | `#DEFAULTS`, `#User.registry` |
+| `TypeAlias` (`type X = …`) | `#Config`, `#Outer.Inner` |
 
 A dotted selector walks scopes: `#Outer.Inner.method` descends through the body of each named
 node. Only the bodies of classes and functions are descended into, so a name defined inside an
