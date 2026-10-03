@@ -51,6 +51,20 @@ def extract_symbol(path: Path, selector: str) -> str:
     return "\n".join(lines[first - 1 : last])
 
 
+def symbol_line(path: Path, selector: str) -> int | None:
+    """Return the line a definition of ``selector`` starts on, or None.
+
+    A file that does not parse defines nothing, so it answers None rather than
+    raising: the caller may have a region of that name to fall back on.
+    """
+    source = _text.read(path)
+    try:
+        node = _find(_tree(path, source), path, selector)
+    except (SelectorNotFound, SourceUnparsable):
+        return None
+    return _span(node, source.split("\n"))[0]
+
+
 def _tree(path: Path, source: str) -> ast.Module:
     """Parse a source file, reporting a syntax error as a snippet error."""
     try:

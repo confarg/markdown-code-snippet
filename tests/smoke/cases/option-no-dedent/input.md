@@ -1,4 +1,4 @@
-<!-- snippet: ../lib/models.py#User.rename dedent=false -->
+<!-- snippet: ../src/models.py#User.rename dedent=false -->
 ```python
 stale
 ```

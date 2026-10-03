@@ -78,9 +78,49 @@ concatenate definitions that have nothing to do with each other. An error costs 
 edit and cannot mislead a reader; the argument is in
 [06-design-decisions.md#an-ambiguous-selector-fails](06-design-decisions.md#an-ambiguous-selector-fails).
 
+## Named regions
+
+`path#name` extracts a region the file marks out itself. The file carries two marker comments,
+each alone on its line:
+
+```python
+# [snippet: body]
+config = load(env_prefix="MYAPP_")
+# [/snippet]
+```
+
+The content between the markers is the region. It is text-level: the scanner looks for markers
+in any file, whatever its language, and needs no parser. That is what lets a span start in the
+middle of a function, which no symbol can name.
+
+**The markers are not part of the output.** A region is what lies strictly between them. The
+whole-file selector keeps them, because a whole file is meant to be the file.
+
+**Comment syntaxes.** A marker is a whole-line comment in one of `#`, `//`, `;`, `--`, or an HTML
+comment `<!-- -->`. The name is `[A-Za-z_][A-Za-z0-9_-]*`; the closing marker is always bare,
+`[/snippet]`, and closes the region opened most recently.
+
+**Regions do not nest, and names are unique per file.** A start marker inside an open region, a
+second region with a name already used, an end marker with nothing open, and a region never
+closed are all errors, each naming the line it concerns. A failed file produces no region at all,
+and so no partial snippet.
+
+**Dispatch.** A selector is first looked up among the regions of the file. For a Python file, if
+no region has the name, the selector falls through to a symbol. If both answer, the selector is
+an error ([06-design-decisions.md#a-region-and-a-symbol-cannot-share-a-name](06-design-decisions.md#a-region-and-a-symbol-cannot-share-a-name)).
+A file with no markers and no symbol support keeps the old error.
+
+**Dedent** applies to a region as to any extracted content: a region inside a function is read
+back at column zero.
+
+The reasons for the syntax and the stripping are in
+[06-design-decisions.md#region-markers-are-comments](06-design-decisions.md#region-markers-are-comments),
+and what the marker scan cannot see is in
+[07-limitations.md#markers-are-recognized-as-text](07-limitations.md#markers-are-recognized-as-text).
+
 ## Errors carry a location
 
 Every extraction failure — file missing, file undecodable, file unparsable, selector not found,
-selector ambiguous — is reported with the **Markdown file and the line number of the annotation**,
+selector ambiguous, region markers unbalanced — is reported with the **Markdown file and the line number of the annotation**,
 not just the source path. The reader of the error is someone who has to go and fix an annotation,
 and the source file alone does not say which of them is wrong.

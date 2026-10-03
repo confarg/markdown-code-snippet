@@ -3,7 +3,7 @@
 An annotation inside a fence is an example, not an annotation:
 
 ````markdown
-<!-- snippet: ../lib/config.yaml -->
+<!-- snippet: ../src/config.yaml -->
 ```yaml
 host: localhost
 ```

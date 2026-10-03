@@ -1,4 +1,4 @@
-<!-- snippet: /lib/models.py#User -->
+<!-- snippet: /src/models.py#User -->
 ```python
 stale
 ```

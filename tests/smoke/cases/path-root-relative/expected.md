@@ -1,6 +1,6 @@
 The default is three:
 
-<!-- snippet: /lib/settings.py#RETRIES -->
+<!-- snippet: /src/settings.py#RETRIES -->
 ```python
 RETRIES = 3
 ```

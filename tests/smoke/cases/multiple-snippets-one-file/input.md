@@ -2,18 +2,18 @@
 
 ## Configuration
 
-<!-- snippet: ../lib/config.yaml -->
+<!-- snippet: ../src/config.yaml -->
 ```yaml
 stale
 ```
 
 ## Renaming a user
 
-<!-- snippet: ../lib/models.py#User.rename -->
+<!-- snippet: ../src/models.py#User.rename -->
 ```python
 stale
 ```
 
 ## Defaults
 
-<!-- snippet: /lib/settings.py#RETRIES -->
+<!-- snippet: /src/settings.py#RETRIES -->

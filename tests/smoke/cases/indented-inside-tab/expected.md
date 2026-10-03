@@ -1,6 +1,6 @@
 === "YAML"
 
-    <!-- snippet: ../lib/config.yaml -->
+    <!-- snippet: ../src/config.yaml -->
     ```yaml
     # The server block is what the quickstart walks through.
     server:

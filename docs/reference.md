@@ -29,12 +29,35 @@ one backtick longer than the block it contains.
 | `path/to/module.py#Name` | a class, function or assignment named `Name` |
 | `path/to/module.py#Class.method` | a method, dedented to column zero |
 | `path/to/module.py#Outer.Inner.method` | any depth of nesting |
+| `path/to/config.yaml#name` | the region the file marks out as `name` |
 
 Decorators are part of a definition and come with it. A docstring is part of the body and comes
 with it. A comment *above* the definition does not.
 
-Only `.py` and `.pyi` files have selectors. A selector on any other file is an error rather than a
-silently ignored fragment.
+Only `.py` and `.pyi` files have symbol selectors. A selector on any other file is an error rather
+than a silently ignored fragment, unless the file marks out a region of that name.
+
+## Named regions
+
+A file can mark out a span itself, with two comments each alone on its line:
+
+```python
+# [snippet: body]
+config = load(env_prefix="MYAPP_")
+# [/snippet]
+```
+
+`path#body` extracts what lies between the markers, and the markers are not part of the output.
+The comment can be `#`, `//`, `;`, `--`, or an HTML comment `<!-- [snippet: body] -->`. The name is
+letters, digits, `_` and `-`, and the closing marker is always `[/snippet]`.
+
+Because it is a comment, the marker works in any language and survives a formatter that keeps
+comments on their own line. It also reaches inside a function, where no symbol can. A region is
+dedented like any other extracted content.
+
+Regions cannot nest, and a name can be used once per file. A file whose markers do not balance is
+an error that names the line, and so is a name that is both a region and a Python definition, since
+the tool will not guess which one you meant.
 
 A selector matching more than one definition — `@overload` stubs beside their implementation, a
 name assigned twice — is an error listing every line it matched. The tool does not choose for you.
@@ -97,10 +120,12 @@ Every message names the Markdown file and the line of the annotation that caused
 | `SourceUnparsable` | A Python file will not parse. |
 | `AbsolutePath` | The path has a drive letter or a UNC prefix. |
 | `RootNotFound` | A `/`-prefixed path was used and no root could be found. |
-| `SelectorUnsupported` | A selector was given for a file type that has none. |
+| `SelectorUnsupported` | A selector was given for a file that has no symbols and marks out no regions. |
 | `SelectorNotFound` | The file defines no such name. The message lists what it does define. |
 | `SelectorNotAScope` | A dotted selector tried to descend into a value. |
 | `AmbiguousSelector` | The name is defined more than once. The message lists the lines. |
+| `SelectorNamesTwice` | The name is both a region and a Python definition. The message gives both lines. |
+| `RegionMarkerError` | A region marker is malformed, nested, reused, unclosed, or closes nothing. The message gives the line. |
 
 All of them subclass `SnippetError`.
 
