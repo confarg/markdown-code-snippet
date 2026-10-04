@@ -1,6 +1,6 @@
 [project]
 name = "markdown-code-snippet"
-version = "0.0.1.dev1"
+version = "0.0.1.dev2"
 description = "Inject snippets of files or python code into Markdown files."
 license = "MPL-2.0"
 license-files = ["LICENSE"]
