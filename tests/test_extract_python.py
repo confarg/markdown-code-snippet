@@ -105,6 +105,32 @@ class TestDefinitions:
     def test_a_plain_assignment(self, module):
         assert extract_symbol(module, "counter") == "counter = 0"
 
+    def test_a_type_statement(self, write):
+        source = write(
+            "m.py",
+            "type Config = int | str\n\n\ndef main() -> None: ...\n",
+        )
+
+        assert extract_symbol(source, "Config") == "type Config = int | str"
+
+    def test_a_generic_type_statement(self, write):
+        source = write("m.py", "type Pair[T] = tuple[T, T]\n")
+
+        assert extract_symbol(source, "Pair") == "type Pair[T] = tuple[T, T]"
+
+    def test_a_type_statement_inside_a_class(self, write):
+        source = write(
+            "m.py",
+            """
+            class Outer:
+                type Inner = list[int]
+            """,
+        )
+
+        assert extract_symbol(source, "Outer.Inner") == (
+            "    type Inner = list[int]"
+        )
+
     def test_a_tuple_assignment_yields_the_whole_statement(self, module):
         assert extract_symbol(module, "SECOND") == "FIRST, SECOND = 1, 2"
 

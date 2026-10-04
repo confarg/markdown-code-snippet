@@ -110,6 +110,8 @@ def _defined_names(node: ast.stmt) -> list[str]:
     """Return every name a statement binds, in source order."""
     if isinstance(node, ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef):
         return [node.name]
+    if isinstance(node, ast.TypeAlias):
+        return [node.name.id]
     if isinstance(node, ast.AnnAssign):
         return _target_names(node.target)
     if isinstance(node, ast.Assign):
