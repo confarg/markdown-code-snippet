@@ -134,7 +134,8 @@ class SelectorUnsupported(SnippetError):
         """Build the error for a selector on a file that has none."""
         super().__init__(
             f"{path.name} has no selectors, so {selector!r} cannot be"
-            " resolved; only .py files can be addressed by symbol",
+            " resolved; only .py files can be addressed by symbol, and any"
+            " file by a region it marks out with [snippet: name] comments",
         )
 
 
@@ -174,3 +175,37 @@ class AmbiguousSelector(SnippetError):
             f"{selector!r} is defined {len(lines)} times in {path.name}"
             f" (lines {where}), so the selector is ambiguous",
         )
+
+
+class SelectorNamesTwice(SnippetError):
+    """A selector names both a marked region and a Python definition.
+
+    Dev Notes:
+        docs-dev/architecture/06-design-decisions.md#a-region-and-a-symbol-cannot-share-a-name
+    """
+
+    def __init__(
+        self,
+        path: Path,
+        selector: str,
+        region_line: int,
+        symbol_line: int,
+    ) -> None:
+        """Build the error for a name that both selector kinds answer to."""
+        super().__init__(
+            f"{selector!r} names both a marked region (line {region_line}) and"
+            f" a definition (line {symbol_line}) in {path.name}, so the"
+            " selector is ambiguous",
+        )
+
+
+class RegionMarkerError(SnippetError):
+    """A source file's region markers are malformed or unbalanced.
+
+    Dev Notes:
+        docs-dev/architecture/03-extraction.md#named-regions
+    """
+
+    def __init__(self, path: Path, line: int, reason: str) -> None:
+        """Build the error for a marker that breaks the file's regions."""
+        super().__init__(f"{path.name} line {line}: {reason}")

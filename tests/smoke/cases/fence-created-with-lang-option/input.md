@@ -1,1 +1,1 @@
-<!-- snippet: ../lib/hosts.conf lang=ini -->
+<!-- snippet: ../src/hosts.conf lang=ini -->

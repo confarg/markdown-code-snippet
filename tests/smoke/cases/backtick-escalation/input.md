@@ -1,6 +1,6 @@
 # Release notes
 
-<!-- snippet: ../lib/release.md -->
+<!-- snippet: ../src/release.md -->
 ```markdown
 stale
 ```

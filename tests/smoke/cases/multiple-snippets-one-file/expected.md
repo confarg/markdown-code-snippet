@@ -2,7 +2,7 @@
 
 ## Configuration
 
-<!-- snippet: ../lib/config.yaml -->
+<!-- snippet: ../src/config.yaml -->
 ```yaml
 # The server block is what the quickstart walks through.
 server:
@@ -16,7 +16,7 @@ logging:
 
 ## Renaming a user
 
-<!-- snippet: ../lib/models.py#User.rename -->
+<!-- snippet: ../src/models.py#User.rename -->
 ```python
 def rename(self, name: str) -> User:
     """Return a copy of this user under a new name."""
@@ -25,7 +25,7 @@ def rename(self, name: str) -> User:
 
 ## Defaults
 
-<!-- snippet: /lib/settings.py#RETRIES -->
+<!-- snippet: /src/settings.py#RETRIES -->
 ```python
 RETRIES = 3
 ```

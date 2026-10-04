@@ -48,6 +48,7 @@ function rather than reimplementing the decision next to itself.
 | Where is the project root? | `_resolve.find_root` |
 | What does this selector extract? | `_extract.extract` |
 | Which lines define this symbol? | `_extract._python` (span helpers) |
+| Where does this region start and end? | `_extract._region.find_regions` |
 | How long must this fence be? | `_render.fence_length` |
 | What does the body look like? | `_render.render_body` |
 | What language does this extension imply? | `_lang.language_for` |

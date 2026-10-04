@@ -1,4 +1,4 @@
-<!-- snippet: ../lib/settings.py#configure -->
+<!-- snippet: ../src/settings.py#configure -->
 ```python
 stale
 ```

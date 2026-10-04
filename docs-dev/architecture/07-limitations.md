@@ -33,10 +33,37 @@ file, or a line range once those exist.
 
 ## Only Python has symbol selectors
 
-`#Name` is understood in `.py` files only. A YAML, TOML, JSON or shell file can be included whole
-or not at all: showing one service out of a `docker-compose.yaml` needs the named regions that are
-filed on [features/](../todo/features/README.md). Symbol extraction for other languages would need
-a parser per language, which is a dependency question rather than a design one.
+`#Name` is understood in `.py` files only. In any other file a selector can name a region, and only
+one the file marks out itself: showing one service out of a `docker-compose.yaml` means putting
+`[snippet: …]` markers around it in that file ([03-extraction.md#named-regions](03-extraction.md#named-regions)).
+Symbol extraction for other languages would need a parser per language, which is a dependency
+question rather than a design one.
+
+## Markers are recognized as text
+
+A region marker is found by reading the file line by line, not by parsing it. The scanner does
+not know that a line sits inside a Python string, a heredoc, or a block comment of another language,
+so a marker-shaped line there is still a marker:
+
+```python
+HELP = """
+# [snippet: usage]
+"""
+```
+
+That is rare. The scanner takes a marker-shaped line as an instruction wherever it appears, so a
+file that quotes its own marker syntax must not put a whole marker line in a string.
+
+A consequence worth knowing: a marker written inside a region's own body is a nesting error, and a
+marker that is never closed fails the file even for a selector that names something else in it.
+That is deliberate — a file with broken markers is reported, not partly read.
+
+## Region names cannot contain a dot
+
+A region name follows `[A-Za-z_][A-Za-z0-9_-]*`. A dot is the selector's own separator for a
+dotted path into a Python scope, so a dot is not allowed in a region's name: a marker naming
+`db.primary` is reported as malformed rather than accepted and then unreachable. Choose a dash or
+an underscore.
 
 ## Adjacency is strict
 

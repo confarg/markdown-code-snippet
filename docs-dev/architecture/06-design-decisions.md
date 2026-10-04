@@ -165,11 +165,70 @@ decisions in service of nothing yet. A `[tool.markdown-code-snippet]` table is f
 
 ## Whole files and Python symbols only
 
-**Decided:** v1 extracts an entire file, or one Python definition by name.
+**Decided for v1:** the tool extracts an entire file, or one Python definition by name.
 
-Named regions delimited by marker comments in the source file, and GitHub-style line ranges, are
-both filed as features. They are the obvious next selectors — regions are the only way to show
-part of a `config.yaml` — but they are additions behind the extractor dispatch, not changes to
-anything decided here, so shipping without them costs nothing later. Line ranges are also the one
-selector kind that is silently wrong after an unrelated edit above the range, which is a reason to
-think before adding them rather than to add them first.
+Named regions were added afterwards, behind the extractor dispatch, and are argued in the entries
+below. GitHub-style line ranges remain a feature. They are the one selector kind that is silently
+wrong after an unrelated edit above the range, which is a reason to think before adding them rather
+than to add them first.
+
+## Region markers are comments
+
+**Decided:** a region is delimited by `[snippet: name]` and `[/snippet]`, each written as a comment
+alone on its line. The comment syntaxes recognized are `#`, `//`, `;`, `--`, and `<!-- -->`.
+
+The marker has to live in the source file, in whatever language it is, so the choice of carrier is
+the choice of a comment. A comment is the only thing every language already has and that a
+formatter, a linter and a reader all treat as inert. The spelling follows the annotation's own
+`snippet:` vocabulary, so the author has one word to learn for both sides of the tool.
+
+Precedent: `pymdownx.snippets` delimits sections with `--8<-- [start:name]` and `[end:name]` inside
+a comment, in any file, and removes them from the output. C# and VS Code read `#region` /
+`#endregion` pairs out of ordinary comments in the same way. The closer here is bare, not
+`[/snippet: name]` as `pymdownx.snippets` writes it, because regions cannot nest: the scanner always
+knows which region a closer belongs to, so the name would only be a second place to mistype.
+
+Rejected: a closing marker that repeats the name, `[/snippet: name]`. A mismatched closer would be
+caught by the name check, but that is a rule the bare closer does not need.
+
+Rejected: a sentinel that is not a comment, such as a line of `=====`. Every language would need its
+own, none of them would be inert to a formatter, and none would be recognizable to a reader.
+
+## Region markers are stripped from the output
+
+**Decided:** the marker lines are not part of a region's content. A region is what lies between
+them, and the whole-file selector keeps them.
+
+A marker is an instruction to the tool, not part of the code it brackets. Leaving it in would
+show `# [snippet: body]` to a reader of the documentation, and a reader cannot act on it. The
+whole-file selector keeps them because a whole file is, by definition, the file.
+
+Precedent: `pymdownx.snippets` removes its section markers from included text.
+
+## Regions do not nest
+
+**Decided:** a region may not start while another is open, and a name may be used once per file.
+
+Nesting would let an outer region contain inner markers that would then have to be stripped from
+its content, which is a second rule about which lines count. With flat regions every line belongs to
+at most one region, and any output is a single unambiguous span. A duplicate name is the same
+ambiguity in another form, and is an error for the same reason a duplicate symbol is
+([an ambiguous selector fails](#an-ambiguous-selector-fails)).
+
+Rejected: allowing nesting and selecting the innermost, or every level. The first hides the outer
+span from a reader; the second is the concatenation problem that ambiguity already rules out.
+
+## A region and a symbol cannot share a name
+
+**Decided:** in a Python file, a selector that names both a region and a definition is an error,
+and neither silently wins.
+
+A Python file can be addressed both by a `#Name` symbol and by a marked region, so the same selector
+has two meanings. Letting the region win would silently change what an existing `#load` selector
+shows the day someone adds a `[snippet: load]` marker, which is exactly the silent change the
+ambiguity rule exists to prevent. Letting the symbol win would make a region useless in any file
+that also has a definition of the same name. The error costs the author one rename, and the message
+names both lines.
+
+A file with a region and a broken Python syntax is not an error. A file that does not parse defines
+no symbol, so there is nothing for the region to clash with.

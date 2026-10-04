@@ -1,4 +1,4 @@
-<!-- snippet: ../lib/models.py#Team.Invite -->
+<!-- snippet: ../src/models.py#Team.Invite -->
 ```python
 stale
 ```

@@ -1,7 +1,3 @@
-# Configuration
-
-<!-- snippet: ../src/config.yaml -->
-```yaml
 # The server block is what the quickstart walks through.
 server:
   host: localhost
@@ -10,4 +6,3 @@ server:
 logging:
   level: INFO
   format: "%(asctime)s %(levelname)s %(message)s"
-```

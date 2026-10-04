@@ -37,7 +37,6 @@ To include a whole file:
 
 ````markdown
 <!-- snippet: path/to/config.yaml -->
-
 ```yaml
 db:
   port: 5432
@@ -48,7 +47,6 @@ To include a specific class:
 
 ````markdown
 <!-- snippet: path/to/foo.py#Foo -->
-
 ```python
 @dataclass
 class Foo:
@@ -62,7 +60,6 @@ To include a specific method:
 
 ````markdown
 <!-- snippet: path/to/bar.py#Bar.get_value -->
-
 ```python
 def get_value(self):
     return self.value
@@ -71,15 +68,37 @@ def get_value(self):
 
 Note that code snippets are dedented by default. Add `dedent=false` to the info string to disable it.
 
-To include a specific top-level definition or assignment:
+To include a specific top-level definition:
 
 ````markdown
 <!-- snippet: path/to/baz.py#BAZ -->
-
 ```python
 BAZ: int = 42
 ```
 ````
+
+Finally, if you want to copy-paste a random snippet that cannot be expressed as a single class, function or definition, you can opt to modify your code specifically for this purpose and add anchors, like so:
+
+```python
+# [snippet: increase_qux]
+qux = some_func()
+qux += 1  # always increase qux by 1
+# [/snippet]
+```
+
+You can then specify the snippet the usual way
+
+````markdown
+<!-- snippet: path/to/qux.py#increase_qux -->
+```python
+qux = some_func()
+qux += 1  # always increase qux by 1
+```
+````
+
+> [!NOTE]
+> Make sure the snippet name does not collide with another symbol declared in the file.
+
 
 ## Paths
 

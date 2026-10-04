@@ -76,6 +76,7 @@ In this section, we keep a map of the source files for easier and quicker naviga
 | `_extract/__init__.py` | Dispatch from a selector to an extractor. The seam new selector kinds are added at. |
 | `_extract/_whole.py` | Whole-file extraction. |
 | `_extract/_python.py` | Python symbol lookup with `ast`: spans, decorators, dedent, ambiguity. |
+| `_extract/_region.py` | Named regions: the marker comments a file sets around a span, and the checks that they balance. |
 | `_lang.py` | Extension to language token, used only when creating a missing fence. |
 | `_text.py` | The only place bytes become text: UTF-8, LF normalization, no platform translation. |
 | `_render.py` | Building a block from extracted content: fence length, right-strip, re-indent. |
